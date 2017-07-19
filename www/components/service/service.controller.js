@@ -12,17 +12,24 @@
 
     var vm = this;
     vm.showMap = true;
+    vm.showList = false;
     vm.showRange = false;
+    vm.showDetails = false;
     var vmmap = {};
+    var temp = [];
     vm.services = "";
+    vm.spDetails = "";
     vm.SearchWord = "Car";
     vm.SearchType = "Repair";
     vm.mapBtnName = "List";
     vm.emptySearchResultMessage = "";
     var mapOptions = {};
-    var gMapUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+    var gMapUrl = 'https://maps.googleapis.com/maps/api/place';
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
+    var googleKey = "AIzaSyBkNNf7NM4yxBBAe76VuxbuFo-6Av3Rk3o";
+    var previousLocationLat = "";
+    var previousLocationLong = "";
 
     vm.showRange = function () {
       vm.rangeVisible = true;
@@ -152,7 +159,10 @@
         }
 
         // resolve the city name
-        codeLatLng(vm.mylat, vm.mylong);
+        if (previousLocationLat !== vm.mylat || previousLocationLong !== vm.myLong) {
+          codeLatLng(vm.mylat, vm.mylong);
+        }
+
         vm.searchThis(vm.SearchWord, vm.SearchType, vm.mylat , vm.mylong, "10000", vmmap);
         $ionicLoading.hide();
 
@@ -164,6 +174,7 @@
 
     vm.swapView = function (mapOn) {
       vm.showMap = mapOn;
+      vm.showList = !mapOn;
       if (mapOn) {
         vm.mapBtnName = "List";
       } else {
@@ -173,6 +184,7 @@
 
     // Adds a marker to the map.
     function addMarker(location, map, serviceprovider) {
+      console.log("Starting addMarker for " + serviceprovider.name);
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
       var marker = new google.maps.Marker({
@@ -181,31 +193,36 @@
         label: serviceprovider.name,
         map: map
       });
+
       marker.addListener('click', function() {
         infowindow.open(map, marker);
       });
 
+
+      console.log(serviceprovider);
       var contentString = '<div id="content">'+
         '<div id="siteNotice">'+
         '</div>'+
         '<h1 id="firstHeading" class="firstHeading">' + serviceprovider.name + '</h1>'+
         '<div id="bodyContent">'+
         '<p><b>Rating: ' + serviceprovider.rating + ' out of 5</b></p>' +
-        '<p>' + serviceprovider.vicinity + '</p>' +
-        'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-        '(last visited June 22, 2009).</p>'+
+        '<p>' + vm.serviceDetails.website + '</p>' +
+        '</p>'+
         '</div>'+
         '</div>';
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString
       });
+
       return marker.getPosition();
     }
 
 
 
     vm.searchThis = function (keyw, type, userlat, userlong, radius) {
+      var allDone = "";
+
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
       if (userlat === undefined || userlong === undefined || keyw === undefined) {
@@ -232,17 +249,6 @@
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
 
-      /*
-      switch (sno) {
-        case '1'
-          alert("1. Selected Name: " + name );
-          break;
-        case '2'
-          alert("2. Selected Name: " + name );
-          break;
-        default:
-      }*/
-
       vmmap = new google.maps.Map(document.getElementById("map"), mapOptions);
 
       var tag;
@@ -251,18 +257,14 @@
       tag = tag.replace(/_/g, '+').toLowerCase();
 
       console.log("Executing search for '" + tag + "' and '" + userlat + ',' + userlong + "' in radius " + radius);
-      console.log(gMapUrl + "?radius=" + radius + "&key=AIzaSyBkNNf7NM4yxBBAe76VuxbuFo-6Av3Rk3o&keyword=" + tag + "&location=" + userlat + ',' + userlong);
+      console.log(gMapUrl + "/nearbysearch/json?radius=" + radius + "&key=" + googleKey + "&keyword=" + tag + "&location=" + userlat + ',' + userlong);
 
       if (tag !== "") {
 
         $http({
             method: "GET",
-            url: gMapUrl + "?radius=" + radius + "&key=AIzaSyBkNNf7NM4yxBBAe76VuxbuFo-6Av3Rk3o&keyword=" + tag + "&location=" + userlat + ',' + userlong,
-            timeout: 10000,
-            headers: {
-              'Authorization': "Bearer " + window.localStorage.getItem("id_token"),
-              'Authentication': "Bearer " + window.localStorage.getItem("itemax_access_token")
-            }
+            url: gMapUrl + "/nearbysearch/json?radius=" + radius + "&key=" + googleKey + "&keyword=" + tag + "&location=" + userlat + ',' + userlong,
+            timeout: 10000
         }).then(function (response) {
 
           console.log(response);
@@ -277,8 +279,10 @@
             for (var i = 0; i < vm.services.length; i++) {
 
               if (vm.services[i].geometry.location != null && vm.services[i].geometry.location.lat != null && vm.services[i].geometry.location.lng != null) {
-                var serviceLatlng = new google.maps.LatLng(vm.services[i].geometry.location.lat, vm.services[i].geometry.location.lng);
-                addMarker(serviceLatlng, vmmap, vm.services[i]);
+
+                vm.serviceDetails(vm.services[i]);
+
+
               }
 
               /******************* CHECK AGAIN, DIDN'T WORK BECAUSE OPEN_NOW NOT EXISTING FOR SOME SERVICES
@@ -299,6 +303,11 @@
               }
 
             }
+            for (var k = 0; k < vm.services.length; k++) {
+              var serviceLatlng = new google.maps.LatLng(vm.services[k].geometry.location.lat, vm.services[k].geometry.location.lng);
+              addMarker(serviceLatlng, vmmap, vm.services[k]);
+            }
+
           }
 
           cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -307,7 +316,9 @@
           },50)
 
           vmmap.setZoom(13);
-          vmmap.setCenter(addMarker(userLatLng, vmmap, '{name: "You are here"}'));
+          vmmap.setCenter(addMarker(userLatLng, vmmap, '[name: "You are here"]'));
+
+
           vm.map = vmmap;
           vm.rangeVisible = false;
           $ionicLoading.hide();
@@ -321,9 +332,43 @@
       }
     }
 
-    vm.serviceDetails = function(serviceID) {
+    vm.serviceDetails = function(service) {
+
+      console.log("Finding service details");
+      console.log(service);
+      console.log(gMapUrl + "/details/json?key=" + googleKey + "&place_id=" + service.place_id);
+      $http({
+        method: "GET",
+        url: gMapUrl + "/details/json?key=" + googleKey + "&place_id=" + service.place_id,
+        timeout: 10000
+      }).then(function (res) {
+        console.log("serviceDetails: ");
+        vm.spDetails = res.data.result;
+        console.log(vm.spDetails);
+
+      }).catch(function (error) {
+        console.log(error);
+        // Catch and handle exceptions from success/error/finally functions
+      });
 
     }
+
+    vm.showserviceDetails = function (service) {
+      vm.showDetails = true;
+      vm.showMap = false;
+      vm.showList = false;
+      vm.showRange = false;
+      vm.serviceDetails(service);
+    }
+
+    vm.closeserviceDetails = function () {
+      vm.showDetails = false;
+      vm.showMap = false;
+      vm.showList = true;
+      vm.showRange = false;
+    }
+
+
 
 
     }

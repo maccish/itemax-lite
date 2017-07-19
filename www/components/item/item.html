@@ -1,0 +1,18 @@
+<ion-view title="ITEMAX Item">
+  <ion-content class="padding">
+    <div ng-controller="itemController as vm">
+      <div class="list" ng-repeat="(key, value) in vm.profile">
+        <img src="{{imgPath}}" style="display: block;
+              max-width:100%;
+              max-height: 10%;
+              width: auto;
+              height: auto;
+              margin: 0 auto;">
+        <label class="item item-input item-stacked-label"  >
+          <span class="input-label">{{key}}</span>
+          <input type="text" placeholder="{{value}}">
+        </label>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

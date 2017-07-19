@@ -1,0 +1,58 @@
+/** itemax style **/
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+.right {
+  position: absolute;
+  top:5px;
+  right: 5px;
+  bottom: 5px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+  height: 100%;
+}
+
+.right-call {
+  position: absolute;
+  top:0px;
+  right: 0px;
+  /*border: 3px solid #73AD21;*/
+  padding: 10px;
+}
+
+.right-blank {
+  position: absolute;
+  right: 0px;
+  border: 3px solid;
+  padding: 0px;
+}
+
+.scroll {
+  height: 100%;
+}
+
+.post-tag {
+  color: #3E6D8E;
+  border-radius: 25px;
+  background-color: #E0EAF1;
+  border-bottom: 1px solid #3E6D8E;
+  border-right: 1px solid #7F9FB6;
+  padding: 3px 4px 3px 4px;
+  margin: 2px 2px 2px 0;
+  text-decoration: none;
+  font-size: 90%;
+  line-height: 2.4;
+  white-space: nowrap;
+}
+
+a.post-tag:hover {
+  background-color: #3E6D8E;
+  color: #E0EAF1;
+  border-bottom: 1px solid #37607D;
+  border-right: 1px solid #37607D;
+  text-decoration: none;
+}
+
+

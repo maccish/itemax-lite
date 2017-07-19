@@ -1,0 +1,39 @@
+<ion-view title="Welcome" ng-controller="DeviceController as vm">
+
+    <ion-content>
+
+
+
+        <div >
+          <div class="list list-inset">
+            <div class="item">
+              <img src="img/android.png" style="width: 70px; height: 70px;"/>
+            </div>
+            <div class="item">
+              Device manufacturer : {{vm.device.manufacturer}}
+            </div>
+            <div class="item">
+              Device model : {{vm.device.model}}
+            </div>
+            <div class="item">
+              Operating System : {{vm.device.platform}}
+            </div>
+            <div class="item">
+              Version : {{vm.device.version}}
+            </div>
+            <div class="item">
+              Serial : {{vm.device.serial}}
+            </div>
+            <div class="item">
+              <button class="button icon-left ion-star button-positive" ng-hide="vm.registerButtonDisabled" ng-click="vm.addDevice(vm.device)">Register Device</button>
+            </div>
+
+          </div>
+        </div>
+
+
+    </ion-content>
+
+
+</ion-view>
+

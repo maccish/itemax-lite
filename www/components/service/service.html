@@ -1,0 +1,102 @@
+<ion-view title="Welcome" ng-controller="serviceController as vm">
+  <div class="bar bar-header" style="height: 55px; text-align: center; width: 100%; margin: auto">
+    <form ng-submit="vm.searchThis(vm.SearchWord, vm.SearchType, vm.mylat, vm.mylong, vm.SearchRadius)">
+      <label class="item item-input" style="width: 150px;float:none;text-align: left;">
+        <i class="icon ion-search placeholder-icon" ></i>
+        <input id="searchbox" ng-model="vm.SearchWord" type="text" placeholder="{{vm.SearchWord}}" style="position: relative; width: 130px;margin:0 auto; text-align: left;">
+      </label>
+    </form>
+    <label class="item item-input item-select" style="width: 100px;float:none;text-align: left;">
+      <select style="margin: 5px" id="typeselector" ng-model="vm.SearchType" ng-change="vm.searchThis(vm.SearchWord, vm.SearchType, vm.mylat, vm.mylong, vm.SearchRadius)" >
+        <option >Repair</option>
+        <option >Rental</option>
+        <option >Store</option>
+        <option >Parts</option>
+        <option >Supplies</option>
+        <option >Cleaning</option>
+        <option >Insurance</option>
+      </select>
+    </label>
+    <button style="margin: 5px" id="rangebutton" class="button icon-left ion-levels button-positive" ng-click="vm.showRange()"></button>
+    <button style="margin: 5px" id="listbutton" ng-hide="vm.showMap" class="button icon-left ion-earth button-positive" ng-click="vm.swapView(!vm.showMap)">{{vm.mapBtnName}}</button>
+    <button style="margin: 5px" id="mapbutton" ng-show="vm.showMap"class="button icon-left ion-clipboard button-positive" ng-click="vm.swapView(!vm.showMap)">{{vm.mapBtnName}}</button>
+  </div>
+  <ion-content class="padding" delegate-handle="myScroll">
+    <div style="position: relative; width: 0; height: 50px" ng-show="vm.rangeVisible"></div>
+    <div class="list" ng-show="vm.rangeVisible">
+      <div class="item range range-positive">
+        <i class="icon ion-home"></i>
+        <input type="range" style="width:100%" name="Range" ng-model="vm.SearchRadius" min="0" max="100000" value="1000" ng-change="vm.searchThis(vm.SearchWord, vm.SearchType, vm.mylat, vm.mylong, vm.SearchRadius)">
+        <i class="icon ion-earth"></i>
+      </div>
+    </div>
+    <div ng-show="vm.showMap">
+      <ion-pane>
+        <ion-header-bar class="bar-stable">
+          <h1 class="title">Services</h1>
+        </ion-header-bar>
+        <ion-content>
+          <div id="map" data-tap-disabled="true"></div>
+        </ion-content>
+      </ion-pane>
+      <script src="https://maps-api-ssl.google.com/maps/api/js?libraries=places&key=AIzaSyBNQ7lcgmvJTtA5LiBMd5IJVwPtMlBJoGE"></script>
+    </div>
+    <div ng-show="vm.showList" id="servicelist">
+      <ion-refresher id="refresher" pulling-text="Pull to refresh" on-refresh="vm.searchThis(vm.SearchWord, vm.SearchType, vm.mylat, vm.mylong, vm.SearchRadius)"></ion-refresher>
+      <div style="position: relative; width: 0; height: 50px"></div>
+      <div><h4>{{vm.searchResultMessage}}</h4></div>
+      <ion-list can-swipe="true">
+        <!-- <button class="button button-icon icon ion-ios-minus-outline" ng-click="shouldShowDelete = !shouldShowDelete"></button>-->
+        <!-- <ion-item class="item-thumbnail-left" ng-repeat="i in vm.services | orderBy: '-rating' | filter: {rating: ''}" ng-click="vm.serviceDetails()"> FILTER EXAMPLE-->
+        <ion-item class="item-thumbnail-left" ng-repeat="i in vm.services | orderBy: '-rating'" ng-click="vm.showserviceDetails(i)">
+          <img ng-src="{{i.icon || 'img/app_icon.png'}}" style="max-height: 50px; max-width: 50px">
+          <h2>{{i.name}}</h2>
+          <h2 ng-show="i.opening_hours" style="color: green">Open now</h2>
+          <h2 ng-show="{{i.rating !== undefined}}">{{i.rating || '?'}} out of 5</h2>
+          <h2 ng-show="{{i.vicinity !== undefined}}">{{i.vicinity}}</h2>
+
+          <div ng-repeat="cat in i.types | filter: {cat: 'point of interest'}">
+
+                <a class="post-tag" ng-click="vm.searchThis(cat, '', vm.mylat, vm.mylong, vm.SearchRadius)">#{{cat}}</a>
+
+          </div>
+
+
+          <a class="right-call" href="tel:{{i.phone}}">
+              <button class="button button-positive">
+                  <i class="icon ion-ios-telephone">{{i.phone}}</i>
+              </button>
+         </a>
+
+
+
+          <ion-option-button class="button-info"
+                             ng-click="acceptItem(i)">
+              Favorite
+          </ion-option-button>
+
+          <ion-option-button class="button-assertive"
+                             ng-click="declineItem(i)">
+              Remove
+          </ion-option-button>
+
+        </ion-item>
+      </ion-list>
+    </div>
+    <div ng-show="vm.showDetails">
+      <div style="position: relative; width: 0; height: 50px"></div>
+      <button style="margin: 5px" id="detailsbutton" class="button icon-left ion-close-round button-positive" ng-click="vm.closeserviceDetails()">Close</button>
+      <div class="list" ng-repeat="(key, value) in vm.spDetails">
+        <label class="item item-input item-stacked-label"  >
+          <span class="input-label">{{key}}</span>
+          <input type="text" placeholder="{{value}}">
+        </label>
+      </div>
+    </div>
+    <div ng-hide="vm.itemsFound"><h2>{{vm.noItemsMessage}}</h2></div>
+  </ion-content>
+  <style>
+
+  </style>
+</ion-view>
+

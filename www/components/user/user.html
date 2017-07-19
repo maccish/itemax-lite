@@ -1,0 +1,15 @@
+<ion-view view-title="ITEMAX Quickstart" ng-controller="userController as vm">
+  <div class="bar bar-header">
+    <button class="right" ion-button color="secondary" ng-click="vm.logout()">Log Out</button>
+  </div>
+  <ion-content class="padding">
+
+    <div class="list" ng-repeat="(key, value) in vm.profile">
+      <label class="item item-input item-stacked-label"  >
+        <span class="input-label">{{key}}</span>
+        <input type="text" placeholder="{{value}}">
+      </label>
+    </div>
+
+  </ion-content>
+</ion-view>

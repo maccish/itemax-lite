@@ -1,0 +1,56 @@
+<ion-view title="Welcome" ng-controller="HomeController as vm">
+  <div class="bar bar-header" style="height: 55px">
+    <!--<button class="button icon ion-navicon"></button> IF NEEDING A MENU BUTTON-->
+    <label class="item item-input">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input id="searchbox" type="text" placeholder="Search" ng-model="itemSearch">
+    </label>
+    <button class="button icon-left ion-plus-round button-positive right" ng-click="vm.addItem()">New Item</button>
+  </div>
+  <ion-content class="padding">
+    <div ng-show="isAuthenticated">
+      <div style="position: relative; width: 0; height: 50px"></div>
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="vm.loadMore()"></ion-refresher>
+      <ion-list show-delete="vm.shouldShowDelete"
+                show-reorder="vm.shouldShowReorder"
+                can-swipe="vm.listCanSwipe">
+        <ion-item ng-repeat="i in vm.displayItems | filter:itemSearch | orderBy: '-createdAt'"
+                  class="item-thumbnail-left" ng-click="">
+
+          <img ng-src="{{i.imgPath}}">
+          <h2>{{i.name}}</h2>  <a class="post-tag right-blank" ng-click="vm.popup('Changing status disabled. Anyway, thanks for trying :)')">{{i.status | uppercase}}</a>
+          <div><h4>{{i.createdAt | date:'medium'}}</h4></div>
+          <!--<ion-option-button class="button-positive"
+                             ng-click="share(item)">
+            Share
+          </ion-option-button>-->
+          <ion-option-button class="button-info"
+                             ng-click="edit(item)">
+            Edit
+          </ion-option-button>
+          <ion-option-button class="button-assertive"
+                             ng-click="declineItem(i)">
+            Remove
+          </ion-option-button>
+          <ion-delete-button class="ion-minus-circled"
+                             ng-click="items.splice($index, 1)">
+          </ion-delete-button>
+          <ion-reorder-button class="ion-navicon"
+                              on-reorder="reorderItem(item, $fromIndex, $toIndex)">
+          </ion-reorder-button>
+          <div ng-show="showDetail">
+
+          </div>
+
+        </ion-item>
+      </ion-list>
+      <div ng-hide="vm.itemsFound">{{vm.noItemsMessage}}</div>
+    </div>
+    <div ng-hide="isAuthenticated">
+      <p>Welcome to itemax! Please log in:</p>
+    </div>
+  </ion-content>
+
+  <!-- FOOTER -->
+
+</ion-view>

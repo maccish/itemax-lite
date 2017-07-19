@@ -1,0 +1,11 @@
+{
+  "name": "ITEMAX App",
+  "short_name": "ITEMAX",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "itemax.png",
+    "sizes": "200x200",
+    "type": "image/png"
+  }]
+}
