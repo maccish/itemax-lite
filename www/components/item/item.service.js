@@ -130,7 +130,7 @@
         });
 
       }, 1000);
-    }
+    };
 
     vm.getItemDetails = function (item) {
       console.log("getting user item...");
