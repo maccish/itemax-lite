@@ -1,4 +1,8 @@
 {
-  "name": "Login",
-  "app_id": ""
+  "name": "itemax",
+  "app_id": "",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic1"
 }

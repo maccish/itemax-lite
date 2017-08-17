@@ -2,7 +2,7 @@
 <widget id="com.itemax.app.mobile" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>ITEMAX</name>
     <description>
-        What do you own?
+        Ownership Reinvented
     </description>
     <author email="support@itemax.com" href="http://www.itemax.com/">
       itemax technologies
@@ -41,17 +41,21 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
-    <plugin name="cordova-plugin-whitelist" spec="~1.3.2" />
-    <plugin name="cordova-plugin-console" spec="~1.0.7" />
-    <plugin name="cordova-plugin-statusbar" spec="~2.2.3" />
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="~4.0.3" />
-    <plugin name="cordova-plugin-geolocation" spec="~2.4.3" />
-  <access origin="*" />
-  <allow-intent href="http://*/*" />
-  <allow-intent href="https://*/*" />
-  <allow-intent href="tel:*" />
-  <allow-intent href="sms:*" />
-  <allow-intent href="mailto:*" />
-  <allow-intent href="geo:*" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <engine name="android" spec="^6.2.3" />
+    <plugin name="cordova-android-support-gradle-release" spec="0.0.2" />
+    <plugin name="cordova-plugin-console" spec="^1.0.7" />
+    <plugin name="cordova-plugin-file" spec="^4.3.3" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
+    <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
 </widget>

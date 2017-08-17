@@ -6,11 +6,12 @@
     .module('app')
     .controller('HomeController', HomeController);
 
-  HomeController.$inject = ['$state', 'authService', '$http', '$timeout', '$rootScope','$cordovaCamera'];
+  HomeController.$inject = ['$state', 'authService', '$http', '$timeout', '$rootScope', 'itemService'];
 
-  function HomeController($state, authService, $http, $timeout, $rootScope, $cordovaCamera) {
+  function HomeController($state, authService, $http, $timeout, $rootScope, itemService) {
 
       var vm = this;
+      var oneMoreTime = true;
 
       vm.login = login;
 
@@ -81,7 +82,10 @@
           console.log("ERROR!");
           console.log(error);
           //alert('Failed to contact server! 2');
-
+          if(oneMoreTime) {
+            oneMoreTime = false;
+            vm.loadMore();
+          }
 
         });
 
@@ -130,34 +134,12 @@
         $state.go("login");
       }
 
-      vm.addItem = function () {
-
-        var options = {
-          quality: 10,           // Higher is better
-          destinationType: Camera.DestinationType.DATA_URL,
-          sourceType: Camera.PictureSourceType.CAMERA,
-          allowEdit: false,
-          encodingType: Camera.EncodingType.JPEG,
-          width: 600,
-          height: 450,
-          //      popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false,
-          correctOrientation: true
-          //  encodingType : Camera.EncodingType.PNG
-        };
-
-        console.log("camera options");
-        console.log(options);
-
-        $cordovaCamera.getPicture(options).then(function (imageData) {
-          vm.imgPath = "data:image/jpeg;base64," + imageData;
-        }, function (err) {
-          // An error occured. Show a message to the user
-        });
-      }
-
       vm.popup = function (text) {
         alert(text);
+      }
+
+      vm.addNewItem = function () {
+        itemService.addNewItem();
       }
 
 

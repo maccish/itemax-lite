@@ -17,8 +17,8 @@
         <option >Insurance</option>
       </select>
     </label>
-    <button style="margin: 5px" id="rangebutton" class="button icon-left ion-levels button-positive" ng-click="vm.showRange()"></button>
-    <button style="margin: 5px" id="listbutton" ng-hide="vm.showMap" class="button icon-left ion-earth button-positive" ng-click="vm.swapView(!vm.showMap)">{{vm.mapBtnName}}</button>
+    <button style="margin: 5px" id="rangebutton" class="button icon-left ion-levels button-positive" ng-click="vm.showRadius()"></button>
+    <button style="margin: 5px" id="listbutton" ng-show="vm.showList" class="button icon-left ion-earth button-positive" ng-click="vm.swapView(!vm.showMap)">{{vm.mapBtnName}}</button>
     <button style="margin: 5px" id="mapbutton" ng-show="vm.showMap"class="button icon-left ion-clipboard button-positive" ng-click="vm.swapView(!vm.showMap)">{{vm.mapBtnName}}</button>
   </div>
   <ion-content class="padding" delegate-handle="myScroll">
@@ -71,12 +71,12 @@
 
 
           <ion-option-button class="button-info"
-                             ng-click="acceptItem(i)">
+                             ng-click="vm.popup('Favorites disabled. Anyway, thanks for trying :)')">
               Favorite
           </ion-option-button>
 
           <ion-option-button class="button-assertive"
-                             ng-click="declineItem(i)">
+                             ng-click="vm.popup('Removing disabled. Anyway, thanks for trying :)')">
               Remove
           </ion-option-button>
 

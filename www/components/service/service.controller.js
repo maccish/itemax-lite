@@ -13,7 +13,7 @@
     var vm = this;
     vm.showMap = true;
     vm.showList = false;
-    vm.showRange = false;
+    vm.showRangeMeter = false;
     vm.showDetails = false;
     var vmmap = {};
     var temp = [];
@@ -31,8 +31,8 @@
     var previousLocationLat = "";
     var previousLocationLong = "";
 
-    vm.showRange = function () {
-      vm.rangeVisible = true;
+    vm.showRadius = function () {
+      vm.rangeVisible = !vm.rangeVisible;
       $timeout(function(){
         $ionicScrollDelegate.$getByHandle('myScroll').scrollTop(true);
       },50)
@@ -43,6 +43,26 @@
       $ionicLoading.show({
         template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Acquiring location!'
       });
+
+      if (window.cordova) {
+        cordova.plugins.diagnostic.isGpsLocationEnabled(
+          function(e) {
+            if (e){
+              alert("location on")
+
+            }
+            else {
+              alert("Location Not Turned ON");
+              cordova.plugins.diagnostic.switchToLocationSettings();
+            }
+          },
+          function(e) {
+            alert('Error ' + e);
+          }
+        );
+      };
+
+
 
       var posOptions = {
         enableHighAccuracy: true,
@@ -315,12 +335,15 @@
             $ionicScrollDelegate.$getByHandle('myScroll').scrollTop(true);
           },50)
 
+          var userLocation = new Object();
+          userLocation.name = "You are here";
+
           vmmap.setZoom(13);
-          vmmap.setCenter(addMarker(userLatLng, vmmap, '[name: "You are here"]'));
+          vmmap.setCenter(addMarker(userLatLng, vmmap, userLocation));
 
 
           vm.map = vmmap;
-          vm.rangeVisible = false;
+          vm.showRadius();
           $ionicLoading.hide();
           $rootScope.$broadcast('scroll.refreshComplete');
 
@@ -357,7 +380,7 @@
       vm.showDetails = true;
       vm.showMap = false;
       vm.showList = false;
-      vm.showRange = false;
+      vm.showRangeMeter = false;
       vm.serviceDetails(service);
     }
 
@@ -365,7 +388,7 @@
       vm.showDetails = false;
       vm.showMap = false;
       vm.showList = true;
-      vm.showRange = false;
+      vm.showRangeMeter = false;
     }
 
 

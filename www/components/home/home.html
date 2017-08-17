@@ -5,7 +5,7 @@
       <i class="icon ion-search placeholder-icon"></i>
       <input id="searchbox" type="text" placeholder="Search" ng-model="itemSearch">
     </label>
-    <button class="button icon-left ion-plus-round button-positive right" ng-click="vm.addItem()">New Item</button>
+    <button class="button icon-left ion-ios-camera button-positive right" style="height: 45px; text-align: center" ng-click="vm.addNewItem()">New Item</button>
   </div>
   <ion-content class="padding">
     <div ng-show="isAuthenticated">
@@ -25,11 +25,11 @@
             Share
           </ion-option-button>-->
           <ion-option-button class="button-info"
-                             ng-click="edit(item)">
+                             ng-click="vm.popup('Editing item disabled. Anyway, thanks for trying :)')">
             Edit
           </ion-option-button>
           <ion-option-button class="button-assertive"
-                             ng-click="declineItem(i)">
+                             ng-click="vm.popup('Removing item disabled. Anyway, thanks for trying :)')">
             Remove
           </ion-option-button>
           <ion-delete-button class="ion-minus-circled"
